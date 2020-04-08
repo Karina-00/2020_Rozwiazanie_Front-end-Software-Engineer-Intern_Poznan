@@ -1,0 +1,14 @@
+@import "../src/variables.scss";
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+.picture {
+  width: 100%;
+  height: 100%;
+}
