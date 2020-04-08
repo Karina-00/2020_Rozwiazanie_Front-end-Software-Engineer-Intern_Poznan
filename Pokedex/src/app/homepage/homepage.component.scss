@@ -1,0 +1,36 @@
+@import '../../variables.scss';
+@import '../../styles.scss';
+
+.background-img {
+  width: 100%;
+  height: 100vh;
+  background: url('../../assets/titlepage-bg.jpg') no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.title:hover {
+  transform: scale(0.99);
+  transition-duration: 1.5;
+}
+
+.title__arrow {
+  margin: auto;
+  width: 100px;
+  display: block;
+  cursor: pointer;
+}
+
+.title__arrow:active {
+  transform: scale(0.9);
+}
+
+.logo-wrapper {
+  width: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
