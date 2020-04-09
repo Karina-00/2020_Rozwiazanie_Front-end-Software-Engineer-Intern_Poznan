@@ -1,0 +1,12 @@
+<div class="container">
+  <div class="card" style="width: 18rem;" *ngFor="let pokemon of sortBy('id')">
+    <img class="card-img-top" [src]="pokemon.img" alt="Card image cap" />
+    <div class="card-body">
+      <p class="card-text">
+        #{{ pokemon.id }}
+        {{ pokemon.name }}
+      </p>
+      <small *ngFor="let type of pokemon.type">{{ type }}</small>
+    </div>
+  </div>
+</div>
