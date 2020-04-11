@@ -71,6 +71,10 @@ h1 {
   border-bottom: 1px solid #00000026;
 }
 
+.marked {
+  background-color: #dc3545c2 !important;
+}
+
 @media screen and(max-width: 430px) {
   .search {
     width: 300px;

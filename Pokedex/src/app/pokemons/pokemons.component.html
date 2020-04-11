@@ -1,12 +1,52 @@
 <div class="container">
-  <div class="card" style="width: 18rem;" *ngFor="let pokemon of sortBy('id')">
-    <img class="card-img-top" [src]="pokemon.img" alt="Card image cap" />
+  <div class="card" style="width: 18rem;" *ngFor="let pokemon of sortBy('num')">
+    <img
+      class="card-img-top"
+      [src]="pokemon.img"
+      [alt]="pokemon.name | titlecase"
+    />
     <div class="card-body">
       <p class="card-text">
         #{{ pokemon.id }}
-        {{ pokemon.name }}
+        {{ pokemon.name | titlecase }}
       </p>
       <small *ngFor="let type of pokemon.type">{{ type }}</small>
     </div>
   </div>
+  <div *ngIf="currentPokemons.length === 0">No results found</div>
+</div>
+
+<nav aria-label="Page navigation example">
+  <ul class="pagination">
+    <li class="page-item" *ngIf="previous !== null" (click)="goToUrl(first)">
+      <a class="page-link" aria-label="Previous">
+        <span aria-hidden="true"><i class="fas fa-angle-double-left"></i></span>
+      </a>
+    </li>
+    <li class="page-item" *ngIf="previous !== null" (click)="goToUrl(previous)">
+      <a class="page-link"><i class="fas fa-angle-left"></i></a>
+    </li>
+    <li class="page-item" *ngIf="next !== last" (click)="goToUrl(next)">
+      <a class="page-link"><i class="fas fa-angle-right"></i></a>
+    </li>
+    <li class="page-item" *ngIf="next !== last" (click)="goToUrl(last)">
+      <a class="page-link" aria-label="Next">
+        <span aria-hidden="true"
+          ><i class="fas fa-angle-double-right"></i
+        ></span>
+      </a>
+    </li>
+  </ul>
+</nav>
+
+<!-- <span class="pokeball">
+  <img *ngIf="loading" class="pokeball" src="../assets/pokaball.png" />
+</span> -->
+
+<div>
+  Icons made by
+  <a href="https://www.flaticon.com/authors/those-icons" title="Those Icons"
+    >Those Icons</a
+  >
+  from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
 </div>

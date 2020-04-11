@@ -9,21 +9,38 @@ import { IPokemonInfo } from '../_interfaces/IPokemonInfo';
 export class PokeapiService {
   constructor(private http: HttpClient) {}
 
-  public getImage(indexNumber: number) {
-    return this.http.get(
-      `'http://assets.pokemon.com/assets/cms2/img/pokedex/detail/${indexNumber}.png'`
-    );
+  // public getImage(indexNumber: number) {
+  //   return this.http.get(
+  //     `'http://assets.pokemon.com/assets/cms2/img/pokedex/detail/${indexNumber}.png'`
+  //   );
+  // }
+
+  // getPokemon(indexNum: number) {
+  //   return this.http.get(`https://pokeapi.co/api/v2/pokemon/${indexNum}/`);
+  // }
+
+  getPokemons(
+    url: string = 'https://pokeapi.co/api/v2/pokemon/?limit=12&offset=0'
+  ) {
+    // z latwa paginacja:
+    return this.http.get(url);
   }
 
-  getPokemon(indexNum: number) {
-    return this.http.get(`https://pokeapi.co/api/v2/pokemon/${indexNum}/`);
+  // getEggType(indexNum: number) {
+  //   return this.http.get(
+  //     `https://pokeapi.co/api/v2/pokemon-species/${indexNum}/`
+  //   );
+  // }
+
+  getEggs() {
+    return this.http.get('https://pokeapi.co/api/v2/egg-group/');
   }
 
-  getPokemons() {
-    return this.http.get('https://pokeapi.co/api/v2/pokemon');
+  getTypes() {
+    return this.http.get('https://pokeapi.co/api/v2/type/');
   }
 
-  getDitto() {
-    return this.http.get('https://pokeapi.co/api/v2/pokemon/ditto/');
+  getColors() {
+    return this.http.get('https://pokeapi.co/api/v2/pokemon-color/');
   }
 }

@@ -38,16 +38,16 @@
           Sort by <i class="fas fa-list-ol"></i>
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <a class="dropdown-item" href="#"
+          <a class="dropdown-item"
             ><i class="fas fa-arrow-up"></i> Index number
           </a>
-          <a class="dropdown-item" href="#"
+          <a class="dropdown-item"
             ><i class="fas fa-arrow-down"></i> Index number
           </a>
-          <a class="dropdown-item" href="#"
+          <a class="dropdown-item"
             ><i class="fas fa-sort-alpha-up-alt"></i> Name A-Z</a
           >
-          <a class="dropdown-item" href="#"
+          <a class="dropdown-item"
             ><i class="fas fa-sort-alpha-down-alt"></i> Name Z-A</a
           >
         </div>
@@ -65,18 +65,36 @@
           Filter <i class="fas fa-filter"></i>
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <a class="dropdown-item" href="#"
+          <a class="dropdown-item" (click)="showResults('Types')"
             ><i class="fas fa-splotch"></i> Type</a
           >
-          <a class="dropdown-item" href="#"
+          <a class="dropdown-item" (click)="showResults('Eggs')"
             ><i class="fas fa-egg"></i> Egg type</a
           >
         </div>
       </div>
     </div>
 
-    <div class="categories-response">
-      <!-- generowane małe labelki do wyboru -->
+    <div class="categories-response" *ngFor="let category of categories">
+      <mat-chip-list aria-label="Fish selection">
+        {{ category.name }}
+        <mat-chip
+          *ngFor="let type of category.arr"
+          [id]="type.url"
+          (click)="clickedType($event)"
+          >{{ type.name }}</mat-chip
+        >
+      </mat-chip-list>
     </div>
+    <button
+      *ngIf="categories.length > 0"
+      class="btn btn-secondary shadow-sm icon"
+      type="button"
+      aria-haspopup="true"
+      aria-expanded="false"
+      (click)="applyFilters()"
+    >
+      Apply
+    </button>
   </nav>
 </div>
