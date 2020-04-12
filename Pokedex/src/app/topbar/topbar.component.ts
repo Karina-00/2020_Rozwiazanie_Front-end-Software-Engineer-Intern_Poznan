@@ -17,6 +17,7 @@ class Category {
     this.arr = arr;
   }
 }
+
 class Type {
   name: string;
   url: string;
@@ -37,6 +38,7 @@ class Type {
 })
 export class TopbarComponent implements OnInit {
   @Output() displayFilteredData: EventEmitter<any> = new EventEmitter();
+  @ViewChild('search', { static: false }) search: ElementRef;
 
   public categories: any[] = [];
   public setOfTypes: any[] = [];
@@ -53,6 +55,7 @@ export class TopbarComponent implements OnInit {
   ngOnInit() {}
 
   showResults(element) {
+    //zmienic zeby sie pakowały doo konkretnych tablic eggs i types!
     let bool = eval(`this.${element}`);
     if (!bool) {
       return 0;
@@ -78,13 +81,21 @@ export class TopbarComponent implements OnInit {
     event.target.classList.toggle('marked');
   }
 
+  searchPokemon() {
+    let value: string = this.search.nativeElement.value;
+    value = value.toLowerCase();
+    console.log(value);
+    this.displayFilteredData.emit(value);
+  }
+
   applyFilters() {
-    let x = document.querySelectorAll('.marked');
-    x.forEach(el => {
-      let url = el.getAttribute('id');
-      let type = el.getAttribute('id').split('/')[5];
-      this.chosen.push([url, type]);
-    });
-    this.displayFilteredData.emit(this.chosen);
+    // let x = document.querySelectorAll('.marked');
+    // x.forEach(el => {
+    //   let url = el.getAttribute('id');
+    //   let type = el.getAttribute('id').split('/')[5];
+    //   this.chosen.push([url, type]);
+    // });
+    // this.displayFilteredData.emit(this.chosen); // to moge zrobic juz w tamtym komponencie, bedzie latwiej!
+    this.displayFilteredData.emit('filters');
   }
 }

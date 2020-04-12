@@ -1,26 +1,25 @@
 <header>
   <h1>Pokedex</h1>
-  <form>
-    <div
-      class="search input-group border rounded-pill p-1 shadow-sm bg-white rounded"
-    >
-      <input
-        type="search"
-        placeholder="What pokemon are you looking for?"
-        aria-describedby="button-addon3"
-        class="form-control bg-none border-0 rounded-pill"
-      />
-      <div class="input-group-append">
-        <button
-          id="button-addon3"
-          type="button"
-          class="btn btn-link text-danger icon"
-        >
-          <i class="fa fa-search"></i>
-        </button>
-      </div>
+  <div
+    class="search input-group border rounded-pill p-1 shadow-sm bg-white rounded"
+  >
+    <input
+      type="search"
+      placeholder="What pokemon are you looking for?"
+      class="form-control bg-none border-0 rounded-pill"
+      (keyup.enter)="searchPokemon()"
+      #search
+    />
+    <div class="input-group-append">
+      <button
+        type="button"
+        class="btn btn-link text-danger icon"
+        (click)="searchPokemon()"
+      >
+        <i class="fa fa-search"></i>
+      </button>
     </div>
-  </form>
+  </div>
 </header>
 
 <div class="container">
@@ -77,7 +76,7 @@
 
     <div class="categories-response" *ngFor="let category of categories">
       <mat-chip-list aria-label="Fish selection">
-        {{ category.name }}
+        <p>{{ category.name }}</p>
         <mat-chip
           *ngFor="let type of category.arr"
           [id]="type.url"
@@ -90,8 +89,6 @@
       *ngIf="categories.length > 0"
       class="btn btn-secondary shadow-sm icon"
       type="button"
-      aria-haspopup="true"
-      aria-expanded="false"
       (click)="applyFilters()"
     >
       Apply

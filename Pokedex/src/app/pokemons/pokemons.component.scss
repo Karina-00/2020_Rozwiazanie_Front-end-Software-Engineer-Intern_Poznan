@@ -10,3 +10,18 @@
 .card {
   margin-bottom: 25px;
 }
+
+.card-img-top {
+  animation: createBox 1s;
+}
+// .card {
+//   animation: createBox 1s;
+// }0
+@keyframes createBox {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}

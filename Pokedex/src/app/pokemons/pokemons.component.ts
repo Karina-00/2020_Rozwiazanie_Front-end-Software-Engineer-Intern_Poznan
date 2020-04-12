@@ -35,7 +35,7 @@ class View {
   styleUrls: ['./pokemons.component.scss'],
 })
 export class PokemonsComponent implements OnInit {
-  public pokemonCount: number;
+  // public pokemonCount: number;
   public pokemons: any[];
   public currentPokemons: any[] = [];
   public next: string;
@@ -46,14 +46,18 @@ export class PokemonsComponent implements OnInit {
     'https://pokeapi.co/api/v2/pokemon?offset=800&limit=12"';
   public loading: boolean = false;
   public eggs: object[] = [];
+  public noResults: boolean = false;
 
   constructor(
     private pokeapiService: PokeapiService,
     private http: HttpClient
   ) {}
 
+  public defaultUrl: string = `${this.pokeapiService.urlTemplate}pokemon/?limit=12&offset=0`;
+
   ngOnInit() {
-    this.loadPokemons('https://pokeapi.co/api/v2/pokemon/?limit=12&offset=0');
+    // this.loadPokemons('https://pokeapi.co/api/v2/pokemon/?limit=12&offset=0');
+    this.initialPokemonsLoad(this.defaultUrl);
   }
 
   loadPokemons(url: string) {
@@ -62,28 +66,70 @@ export class PokemonsComponent implements OnInit {
     this.currentPokemons = [];
     this.pokeapiService.getPokemons(url).subscribe(val => {
       this.pokemons = val['results'];
-      this.pokemonCount = val['count'];
+      // this.pokemonCount = val['count'];
       this.previous = val['previous'];
       this.next = val['next'];
+      console.log(this.next);
       if (this.next >= this.last) {
         this.next = this.last;
         this.pokemons = this.pokemons.slice(0, 7);
       }
       this.pokemons.forEach(el => {
         this.http.get(el['url']).subscribe(res => {
-          let types = [];
-          res['types'].forEach(element => {
-            let el = element.type.name;
-            types.push(el);
-          });
-          let num = this.threeDigitNumber(res['id']);
-          let photo = `http://assets.pokemon.com/assets/cms2/img/pokedex/detail/${num}.png`;
-          let set = new View(res['name'], num, res['id'], photo, types);
-          this.currentPokemons.push(set);
+          this.createPokemonCard(res);
         });
       });
     });
     this.loading = false;
+  }
+
+  initialPokemonsLoad(url: string) {
+    this.loading = true;
+    this.currentPokemons = [];
+    this.pokeapiService.getPokemons(url).subscribe(val => {
+      this.pokemons = val['results'];
+      // this.pokemonCount = val['count'];
+      this.previous = val['previous'];
+      this.next = val['next'];
+
+      if (this.next >= this.last) {
+        this.next = this.last;
+        this.pokemons = this.pokemons.slice(0, 7);
+      }
+      this.pokemons.forEach(el => {
+        this.http.get(el['url']).subscribe(res => {
+          ///////////////////////////
+          this.createPokemonCard(res);
+          // let types = [];
+          // res['types'].forEach(element => {
+          //   let el = element.type.name;
+          //   types.push(el);
+          // });
+          // let num = this.threeDigitNumber(res['id']);
+          // let photo = `http://assets.pokemon.com/assets/cms2/img/pokedex/detail/${num}.png`;
+          // let set = new View(res['name'], num, res['id'], photo, types);
+          // this.currentPokemons.push(set);
+          /////////////////////////
+        });
+      });
+    });
+    this.loading = false;
+  }
+
+  getphoto(num: string) {
+    return `http://assets.pokemon.com/assets/cms2/img/pokedex/detail/${num}.png`;
+  }
+
+  createPokemonCard(pokemon: object) {
+    // dla endpointu np:  .../pokmon/1/
+    let types = [];
+    pokemon['types'].forEach(element => {
+      types.push(element.type.name);
+    });
+    let num = this.threeDigitNumber(pokemon['id']);
+    let photo = this.getphoto(num);
+    let set = new View(pokemon['name'], num, pokemon['id'], photo, types);
+    this.currentPokemons.push(set);
   }
 
   threeDigitNumber(num: number) {
@@ -99,7 +145,8 @@ export class PokemonsComponent implements OnInit {
   }
 
   goToUrl(url: string) {
-    this.loadPokemons(url);
+    // this.loadPokemons(url);
+    this.initialPokemonsLoad(url);
   }
 
   getByEggs(url: string) {
@@ -143,10 +190,39 @@ export class PokemonsComponent implements OnInit {
     return list;
   }
 
-  displayFiltered(pairs: any[]) {
+  searchPokemon(urlValue: string) {
     this.currentPokemons = [];
+    this.pokeapiService.getPokemon(urlValue).subscribe(
+      res => {
+        this.createPokemonCard(res);
+      },
+      err => console.log(err)
+    );
+  }
+
+  displayFiltered() {
+    this.currentPokemons = [];
+    this.pokemons = [];
     let x = document.querySelectorAll('.marked');
     console.log(x);
+    //dla typow
+    x.forEach(el => {
+      let url = el.getAttribute('id');
+      this.http.get(url).subscribe(res => {
+        let name = res['name'];
+        console.log(name);
+        res['pokemon'].forEach(pok => {
+          this.pokemons.push(pok['pokemon']['name']);
+        });
+      });
+      console.log(this.pokemons);
+    });
+    setTimeout(() => {
+      let arr = new Set(this.pokemons);
+      console.log(arr);
+      console.log(this.pokemons.length);
+    }, 1000);
+
     // const fs = require('fs');
     // let arr = [];
     // let eggs: object[] = [];

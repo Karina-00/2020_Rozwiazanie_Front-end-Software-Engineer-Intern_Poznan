@@ -12,6 +12,10 @@ const routes: Routes = [
     path: 'pokedex',
     component: PokedexComponent,
   },
+  // {
+  //   path: 'pokedex/{{num}}',
+  //   Component: ,
+  // }
 ];
 
 @NgModule({

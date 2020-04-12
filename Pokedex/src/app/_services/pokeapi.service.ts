@@ -7,22 +7,17 @@ import { IPokemonInfo } from '../_interfaces/IPokemonInfo';
   providedIn: 'root',
 })
 export class PokeapiService {
+  public urlTemplate = 'https://pokeapi.co/api/v2/';
+  public limit = 12;
   constructor(private http: HttpClient) {}
 
-  // public getImage(indexNumber: number) {
-  //   return this.http.get(
-  //     `'http://assets.pokemon.com/assets/cms2/img/pokedex/detail/${indexNumber}.png'`
-  //   );
-  // }
-
-  // getPokemon(indexNum: number) {
-  //   return this.http.get(`https://pokeapi.co/api/v2/pokemon/${indexNum}/`);
-  // }
+  getPokemon(urlValue: string) {
+    return this.http.get(`${this.urlTemplate}pokemon/${urlValue}/`);
+  }
 
   getPokemons(
-    url: string = 'https://pokeapi.co/api/v2/pokemon/?limit=12&offset=0'
+    url: string = `${this.urlTemplate}/pokemon/?limit=${this.limit}&offset=0`
   ) {
-    // z latwa paginacja:
     return this.http.get(url);
   }
 
@@ -33,14 +28,14 @@ export class PokeapiService {
   // }
 
   getEggs() {
-    return this.http.get('https://pokeapi.co/api/v2/egg-group/');
+    return this.http.get(`${this.urlTemplate}egg-group/`);
   }
 
   getTypes() {
-    return this.http.get('https://pokeapi.co/api/v2/type/');
+    return this.http.get(`${this.urlTemplate}type/`);
   }
 
   getColors() {
-    return this.http.get('https://pokeapi.co/api/v2/pokemon-color/');
+    return this.http.get(`${this.urlTemplate}pokemon-color/`);
   }
 }

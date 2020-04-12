@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-// import { TopbarComponent } from '../topbar/topbar.component';
 import { PokemonsComponent } from '../pokemons/pokemons.component';
 
 @Component({
@@ -8,7 +7,6 @@ import { PokemonsComponent } from '../pokemons/pokemons.component';
   styleUrls: ['./pokedex.component.scss'],
 })
 export class PokedexComponent implements OnInit {
-  // @ViewChild(TopbarComponent, { static: true }) topbar;
   @ViewChild(PokemonsComponent, { static: true }) pokemons;
 
   constructor() {}
@@ -16,6 +14,10 @@ export class PokedexComponent implements OnInit {
   ngOnInit() {}
 
   passData($event) {
-    this.pokemons.displayFiltered($event);
+    if ($event === 'filters') {
+      this.pokemons.displayFiltered();
+    } else {
+      this.pokemons.searchPokemon($event);
+    }
   }
 }
