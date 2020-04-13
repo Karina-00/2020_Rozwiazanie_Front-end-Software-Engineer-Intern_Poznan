@@ -1,26 +1,25 @@
 <header>
   <h1>Pokedex</h1>
-  <form>
-    <div
-      class="search input-group border rounded-pill p-1 shadow-sm bg-white rounded"
-    >
-      <input
-        type="search"
-        placeholder="What pokemon are you looking for?"
-        aria-describedby="button-addon3"
-        class="form-control bg-none border-0 rounded-pill"
-      />
-      <div class="input-group-append">
-        <button
-          id="button-addon3"
-          type="button"
-          class="btn btn-link text-danger icon"
-        >
-          <i class="fa fa-search"></i>
-        </button>
-      </div>
+  <div
+    class="search input-group border rounded-pill p-1 shadow-sm bg-white rounded"
+  >
+    <input
+      type="search"
+      placeholder="What pokemon are you looking for?"
+      class="form-control bg-none border-0 rounded-pill"
+      (keyup.enter)="searchPokemon()"
+      #search
+    />
+    <div class="input-group-append">
+      <button
+        type="button"
+        class="btn btn-link text-danger icon"
+        (click)="searchPokemon()"
+      >
+        <i class="fa fa-search"></i>
+      </button>
     </div>
-  </form>
+  </div>
 </header>
 
 <div class="container">
@@ -38,16 +37,16 @@
           Sort by <i class="fas fa-list-ol"></i>
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <a class="dropdown-item" href="#"
+          <a class="dropdown-item"
             ><i class="fas fa-arrow-up"></i> Index number
           </a>
-          <a class="dropdown-item" href="#"
+          <a class="dropdown-item"
             ><i class="fas fa-arrow-down"></i> Index number
           </a>
-          <a class="dropdown-item" href="#"
+          <a class="dropdown-item"
             ><i class="fas fa-sort-alpha-up-alt"></i> Name A-Z</a
           >
-          <a class="dropdown-item" href="#"
+          <a class="dropdown-item"
             ><i class="fas fa-sort-alpha-down-alt"></i> Name Z-A</a
           >
         </div>
@@ -65,18 +64,41 @@
           Filter <i class="fas fa-filter"></i>
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <a class="dropdown-item" href="#"
+          <a class="dropdown-item" (click)="showResults('Types')"
             ><i class="fas fa-splotch"></i> Type</a
           >
-          <a class="dropdown-item" href="#"
+          <a class="dropdown-item" (click)="showResults('Eggs')"
             ><i class="fas fa-egg"></i> Egg type</a
           >
         </div>
       </div>
     </div>
 
-    <div class="categories-response">
-      <!-- generowane małe labelki do wyboru -->
+    <div
+      class="categories-response"
+      *ngFor="let category of categories; let i = index"
+    >
+      <div>{{ category.name }}</div>
+      <i
+        class="fas fa-times icon close"
+        (click)="closeCategory(i, category.name)"
+      ></i>
+      <mat-chip-list>
+        <mat-chip
+          *ngFor="let type of category.arr"
+          [id]="type.url"
+          (click)="clickedType($event)"
+          >{{ type.name }}</mat-chip
+        >
+      </mat-chip-list>
     </div>
+    <button
+      *ngIf="categories.length > 0"
+      class="btn btn-secondary apply-btn shadow-sm icon"
+      type="button"
+      (click)="applyFilters()"
+    >
+      Apply
+    </button>
   </nav>
 </div>

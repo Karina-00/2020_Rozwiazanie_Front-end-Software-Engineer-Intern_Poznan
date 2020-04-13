@@ -2,19 +2,18 @@
 @import '../../styles.scss';
 
 header {
-  //   background-color: #dc3545c2;
+  background-color: #dc3545c2;
   margin-bottom: 50px;
-  background: url('../../assets/pastel-bg.jpg') no-repeat center center fixed;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
 }
+
 h1 {
   text-align: center;
-  font-family: 'Roboto Slab', serif;
   padding: 30px;
   font-size: 50px;
+}
+
+.mat-chip-list {
+  padding: 15px !important;
 }
 
 .form-control:focus {
@@ -63,11 +62,34 @@ h1 {
     width: 165px;
   }
 }
+
 .categories-response {
   width: 100%;
   height: auto;
   border-top: 1px solid #00000026;
   border-bottom: 1px solid #00000026;
+}
+
+.apply-btn {
+  color: black;
+  background-color: white;
+  border: none;
+  border: 1px solid #00000026;
+}
+
+.apply-btn:active,
+.apply-btn:focus {
+  background-color: white !important;
+  color: black !important;
+  border: 1px solid #00000026 !important;
+}
+
+.close {
+  color: #5d5353;
+}
+
+.marked {
+  background-color: #dc3545c2 !important;
 }
 
 @media screen and(max-width: 430px) {
