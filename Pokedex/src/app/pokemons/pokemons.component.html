@@ -1,33 +1,41 @@
 <div class="container" *ngIf="!loading">
   <div
-    class="card"
+    class="card shadow"
     style="width: 18rem;"
     *ngFor="let pokemon of sortBy('num')"
-    [routerLink]="pokemon.num"
+    routerLink="{{ pokemon.num }}"
     routerLinkActive="active"
     [routerLinkActiveOptions]="{ exact: true }"
   >
-    <img
-      class="card-img-top"
-      [src]="pokemon.img"
-      [alt]="pokemon.name | titlecase"
-    />
-    <div class="card-body">
-      <p class="card-text">
-        #{{ pokemon.id }}
-        {{ pokemon.name | titlecase }}
-      </p>
-      <small *ngFor="let type of pokemon.type">{{ type }}</small>
+    <div class="pokemon-name">
+      <h4>#{{ pokemon.id }}</h4>
+      <h3>{{ pokemon.name | titlecase }}</h3>
+      <mat-chip-list>
+        <mat-chip *ngFor="let type of pokemon.type" class="pokemon-type">{{
+          type
+        }}</mat-chip>
+      </mat-chip-list>
+    </div>
+    <div class="img">
+      <img
+        class="card-img-top"
+        [src]="pokemon.img"
+        [alt]="pokemon.name | titlecase"
+      />
     </div>
   </div>
-  <div *ngIf="!loading && currentPokemons.length === 0">No results found</div>
+
+  <div class="error_message" *ngIf="err">
+    <img src="../../assets/sad-pikachu.png" />
+    <p>There's no such pokemon</p>
+  </div>
 </div>
 
-<span class="pokeball">
-  <img *ngIf="loading" class="pokeball" src="../../assets/pokaball.png" />
+<span *ngIf="loading">
+  <img class="pokeball" src="../../assets/pokaball.png" />
 </span>
 
-<nav aria-label="Page navigation example">
+<nav aria-label="Page navigation">
   <ul class="pagination">
     <li class="page-item" *ngIf="previous !== null" (click)="goToUrl(first)">
       <a class="page-link" aria-label="Previous">
@@ -50,10 +58,10 @@
   </ul>
 </nav>
 
-<div>
+<!-- <div>
   Icons made by
   <a href="https://www.flaticon.com/authors/those-icons" title="Those Icons"
     >Those Icons</a
   >
   from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
-</div>
+</div> -->

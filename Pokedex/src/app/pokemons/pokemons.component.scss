@@ -9,19 +9,60 @@
 
 .card {
   margin-bottom: 25px;
+  height: fit-content;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: auto;
+  height: 200px;
+  align-items: flex-end;
+  position: relative;
+  &:hover {
+    cursor: pointer;
+    filter: saturate(150%);
+    transform: scale(1.03);
+  }
+}
+
+.pokemon-name {
+  padding: 10px 0 0 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  height: 100%;
 }
 
 .card-img-top {
   animation: createBox 1s;
+  width: 170px;
+  position: absolute;
+  right: 0;
+  bottom: 0;
 }
-// .card {
-//   animation: createBox 1s;
-// }0
+
+.pokemon-type {
+  background-color: transparent;
+  flex-wrap: wrap;
+}
+
 @keyframes createBox {
   from {
     transform: scale(0);
   }
   to {
     transform: scale(1);
+  }
+}
+
+.error_message {
+  text-align: center;
+  &:hover {
+    filter: saturate(200%);
+  }
+}
+
+@media screen and(max-width: 400px) {
+  .card-img-top {
+    width: 130px;
   }
 }

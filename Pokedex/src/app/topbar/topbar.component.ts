@@ -55,7 +55,7 @@ export class TopbarComponent implements OnInit {
   ngOnInit() {}
 
   showResults(element) {
-    //zmienic zeby sie pakowały doo konkretnych tablic eggs i types!
+    //zmienic zeby sie pakowały do konkretnych tablic eggs i types!
     let bool = eval(`this.${element}`);
     if (!bool) {
       return 0;
@@ -89,13 +89,11 @@ export class TopbarComponent implements OnInit {
   }
 
   applyFilters() {
-    // let x = document.querySelectorAll('.marked');
-    // x.forEach(el => {
-    //   let url = el.getAttribute('id');
-    //   let type = el.getAttribute('id').split('/')[5];
-    //   this.chosen.push([url, type]);
-    // });
-    // this.displayFilteredData.emit(this.chosen); // to moge zrobic juz w tamtym komponencie, bedzie latwiej!
     this.displayFilteredData.emit('filters');
+  }
+
+  closeCategory(i, category) {
+    this.categories.splice(i, 1);
+    eval(`this.${category} = true`);
   }
 }

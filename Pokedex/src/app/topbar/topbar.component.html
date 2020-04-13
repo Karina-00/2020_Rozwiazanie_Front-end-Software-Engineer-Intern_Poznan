@@ -74,9 +74,16 @@
       </div>
     </div>
 
-    <div class="categories-response" *ngFor="let category of categories">
-      <mat-chip-list aria-label="Fish selection">
-        <p>{{ category.name }}</p>
+    <div
+      class="categories-response"
+      *ngFor="let category of categories; let i = index"
+    >
+      <div>{{ category.name }}</div>
+      <i
+        class="fas fa-times icon close"
+        (click)="closeCategory(i, category.name)"
+      ></i>
+      <mat-chip-list>
         <mat-chip
           *ngFor="let type of category.arr"
           [id]="type.url"
@@ -87,7 +94,7 @@
     </div>
     <button
       *ngIf="categories.length > 0"
-      class="btn btn-secondary shadow-sm icon"
+      class="btn btn-secondary apply-btn shadow-sm icon"
       type="button"
       (click)="applyFilters()"
     >

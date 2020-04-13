@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { IPokemonInfo } from '../_interfaces/IPokemonInfo';
 
 @Injectable({
   providedIn: 'root',
@@ -11,8 +9,16 @@ export class PokeapiService {
   public limit = 12;
   constructor(private http: HttpClient) {}
 
+  getphoto(num: string) {
+    return `http://assets.pokemon.com/assets/cms2/img/pokedex/detail/${num}.png`;
+  }
+
   getPokemon(urlValue: string) {
     return this.http.get(`${this.urlTemplate}pokemon/${urlValue}/`);
+  }
+
+  getPokemonSpecies(urlValue: string) {
+    return this.http.get(`${this.urlTemplate}pokemon-species/${urlValue}/`);
   }
 
   getPokemons(
@@ -20,12 +26,6 @@ export class PokeapiService {
   ) {
     return this.http.get(url);
   }
-
-  // getEggType(indexNum: number) {
-  //   return this.http.get(
-  //     `https://pokeapi.co/api/v2/pokemon-species/${indexNum}/`
-  //   );
-  // }
 
   getEggs() {
     return this.http.get(`${this.urlTemplate}egg-group/`);
