@@ -71,7 +71,6 @@ export class TopbarComponent implements OnInit {
         i++;
       });
     });
-    console.log(types);
     let y = new Category(element, types);
     this.categories.push(y);
     eval(`this.${element} = false`);
@@ -81,15 +80,26 @@ export class TopbarComponent implements OnInit {
     event.target.classList.toggle('marked');
   }
 
+  applyFilters() {
+    this.displayFilteredData.emit('filters');
+  }
+
+  sortData(val) {
+    this.closeFilters();
+    this.displayFilteredData.emit(val);
+  }
+
   searchPokemon() {
+    this.closeFilters();
     let value: string = this.search.nativeElement.value;
     value = value.toLowerCase();
     console.log(value);
     this.displayFilteredData.emit(value);
   }
 
-  applyFilters() {
-    this.displayFilteredData.emit('filters');
+  closeFilters() {
+    this.closeCategory(0, 'Types');
+    this.closeCategory(0, 'Eggs');
   }
 
   closeCategory(i, category) {

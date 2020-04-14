@@ -1,11 +1,10 @@
 <header>
-  <h1>Pokedex</h1>
   <div
     class="search input-group border rounded-pill p-1 shadow-sm bg-white rounded"
   >
     <input
       type="search"
-      placeholder="What pokemon are you looking for?"
+      placeholder="Search your pokemon"
       class="form-control bg-none border-0 rounded-pill"
       (keyup.enter)="searchPokemon()"
       #search
@@ -37,16 +36,16 @@
           Sort by <i class="fas fa-list-ol"></i>
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <a class="dropdown-item"
+          <a class="dropdown-item" (click)="sortData('indexAsc')"
             ><i class="fas fa-arrow-up"></i> Index number
           </a>
-          <a class="dropdown-item"
+          <a class="dropdown-item" (click)="sortData('indexDesc')"
             ><i class="fas fa-arrow-down"></i> Index number
           </a>
-          <a class="dropdown-item"
+          <a class="dropdown-item" (click)="sortData('nameAsc')"
             ><i class="fas fa-sort-alpha-up-alt"></i> Name A-Z</a
           >
-          <a class="dropdown-item"
+          <a class="dropdown-item" (click)="sortData('nameDesc')"
             ><i class="fas fa-sort-alpha-down-alt"></i> Name Z-A</a
           >
         </div>

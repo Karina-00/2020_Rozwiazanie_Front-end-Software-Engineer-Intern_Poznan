@@ -16,6 +16,10 @@ export class PokedexComponent implements OnInit {
   passData($event) {
     if ($event === 'filters') {
       this.pokemons.displayFiltered();
+    } else if (
+      ['nameAsc', 'nameDesc', 'indexAsc', 'indexDesc'].includes($event)
+    ) {
+      this.pokemons.displaySorted($event);
     } else {
       this.pokemons.searchPokemon($event);
     }

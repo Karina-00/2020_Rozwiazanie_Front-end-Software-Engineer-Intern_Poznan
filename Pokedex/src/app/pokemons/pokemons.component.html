@@ -1,8 +1,9 @@
+<h4 *ngIf="sorting && !loading">{{ pokemons.length }} results</h4>
 <div class="container" *ngIf="!loading">
   <div
     class="card shadow"
     style="width: 18rem;"
-    *ngFor="let pokemon of sortBy('num')"
+    *ngFor="let pokemon of currentPokemons"
     routerLink="{{ pokemon.num }}"
     routerLinkActive="active"
     [routerLinkActiveOptions]="{ exact: true }"
@@ -11,9 +12,9 @@
       <h4>#{{ pokemon.id }}</h4>
       <h3>{{ pokemon.name | titlecase }}</h3>
       <mat-chip-list>
-        <mat-chip *ngFor="let type of pokemon.type" class="pokemon-type">{{
-          type
-        }}</mat-chip>
+        <mat-chip *ngFor="let type of pokemon.type" class="pokemon-type">
+          {{ type }}</mat-chip
+        >
       </mat-chip-list>
     </div>
     <div class="img">
@@ -36,7 +37,7 @@
 </span>
 
 <nav aria-label="Page navigation">
-  <ul class="pagination">
+  <ul class="pagination" *ngIf="!sorting">
     <li class="page-item" *ngIf="previous !== null" (click)="goToUrl(first)">
       <a class="page-link" aria-label="Previous">
         <span aria-hidden="true"><i class="fas fa-angle-double-left"></i></span>
@@ -56,12 +57,41 @@
       </a>
     </li>
   </ul>
-</nav>
 
-<!-- <div>
-  Icons made by
-  <a href="https://www.flaticon.com/authors/those-icons" title="Those Icons"
-    >Those Icons</a
-  >
-  from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
-</div> -->
+  <ul class="pagination" *ngIf="sorting">
+    <li
+      class="page-item"
+      *ngIf="currentBottom != 0"
+      (click)="goToSorted('first')"
+    >
+      <a class="page-link" aria-label="Previous">
+        <span aria-hidden="true"><i class="fas fa-angle-double-left"></i></span>
+      </a>
+    </li>
+    <li
+      class="page-item"
+      *ngIf="currentBottom != 0"
+      (click)="goToSorted('previous')"
+    >
+      <a class="page-link"><i class="fas fa-angle-left"></i></a>
+    </li>
+    <li
+      class="page-item"
+      *ngIf="currentTop <= maxValue"
+      (click)="goToSorted('next')"
+    >
+      <a class="page-link"><i class="fas fa-angle-right"></i></a>
+    </li>
+    <li
+      class="page-item"
+      *ngIf="currentTop <= maxValue"
+      (click)="goToSorted('last')"
+    >
+      <a class="page-link" aria-label="Next">
+        <span aria-hidden="true"
+          ><i class="fas fa-angle-double-right"></i
+        ></span>
+      </a>
+    </li>
+  </ul>
+</nav>
