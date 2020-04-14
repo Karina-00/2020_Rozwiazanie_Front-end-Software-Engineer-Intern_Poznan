@@ -52,25 +52,6 @@ export class SinglePokemonViewComponent implements OnInit {
     private http: HttpClient
   ) {
     this.pokemonSetUp();
-    setTimeout(() => {
-      console.log(
-        this.name,
-        this.id,
-        this.num,
-        this.types,
-        this.height,
-        this.weight,
-        this.stats,
-        this.abilities,
-        this.eggs,
-        this.color,
-        this.generation,
-        this.evolutions,
-        this.baseExp,
-        this.baseHappiness,
-        this.captureRate
-      );
-    }, 1000);
   }
 
   ngOnInit() {}
@@ -92,7 +73,7 @@ export class SinglePokemonViewComponent implements OnInit {
       setTimeout(() => {
         let ability = new Ability(name, description);
         this.abilities.push(ability);
-      }, 500);
+      }, 1500);
     });
   }
 
@@ -159,7 +140,7 @@ export class SinglePokemonViewComponent implements OnInit {
     );
     setTimeout(() => {
       this.loading = false;
-    }, 1000);
+    }, 1500);
   }
 
   pokemonSetUp() {

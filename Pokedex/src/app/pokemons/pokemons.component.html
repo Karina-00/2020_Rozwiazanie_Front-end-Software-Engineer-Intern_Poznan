@@ -1,3 +1,4 @@
+<h4 *ngIf="sorting && !loading">{{ pokemons.length }} results</h4>
 <div class="container" *ngIf="!loading">
   <div
     class="card shadow"
@@ -11,9 +12,9 @@
       <h4>#{{ pokemon.id }}</h4>
       <h3>{{ pokemon.name | titlecase }}</h3>
       <mat-chip-list>
-        <mat-chip *ngFor="let type of pokemon.type" class="pokemon-type">{{
-          type
-        }}</mat-chip>
+        <mat-chip *ngFor="let type of pokemon.type" class="pokemon-type">
+          {{ type }}</mat-chip
+        >
       </mat-chip-list>
     </div>
     <div class="img">
@@ -76,14 +77,14 @@
     </li>
     <li
       class="page-item"
-      *ngIf="currentTop != 807"
+      *ngIf="currentTop <= maxValue"
       (click)="goToSorted('next')"
     >
       <a class="page-link"><i class="fas fa-angle-right"></i></a>
     </li>
     <li
       class="page-item"
-      *ngIf="currentTop != 807"
+      *ngIf="currentTop <= maxValue"
       (click)="goToSorted('last')"
     >
       <a class="page-link" aria-label="Next">

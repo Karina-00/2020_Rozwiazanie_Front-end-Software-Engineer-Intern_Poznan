@@ -46,6 +46,8 @@ export class PokemonsComponent implements OnInit {
   sorting: boolean = false;
   currentTop: number = 12;
   currentBottom: number = 0;
+  maxValue: number;
+  maxPage: number;
 
   constructor(
     private pokeapiService: PokeapiService,
@@ -125,12 +127,15 @@ export class PokemonsComponent implements OnInit {
   displaySorted(val) {
     this.loading = true;
     this.sorting = true;
+    this.pokemons = [];
+    this.currentPokemons = [];
+    this.currentBottom = 0;
+    this.currentTop = 12;
     if (val === 'nameAsc') {
       this.nameSorted(2, 'name');
     } else if (val === 'nameDesc') {
       this.nameSorted(1, 'name');
     } else if (val === 'indexAsc') {
-      console.log('l');
       this.initialPokemonsLoad(this.defaultUrl);
     } else {
       this.nameSorted(1, 'id');
@@ -138,11 +143,6 @@ export class PokemonsComponent implements OnInit {
   }
 
   nameSorted(num: number, key: string) {
-    this.loading = true;
-    this.pokemons = [];
-    this.currentPokemons = [];
-    this.currentBottom = 0;
-    this.currentTop = 12;
     const promises = [];
     for (let i = 1; i <= 807; i++) {
       const url = `${this.pokeapiService.urlTemplate}pokemon/${i}`;
@@ -160,20 +160,41 @@ export class PokemonsComponent implements OnInit {
         .sort((a, b) =>
           a[key] > b[key] ? Math.pow(-1, num) : Math.pow(-1, num + 1)
         );
-      console.log(this.pokemons);
     });
     setTimeout(() => {
+      this.addEggs();
       this.displayPokemons();
-    }, 5000);
+      console.log(this.pokemons);
+    }, 7000);
+  }
+
+  addEggs() {
+    this.pokemons.forEach(pokemon => {
+      this.pokeapiService.getPokemonSpecies(pokemon['id']).subscribe(res => {
+        let eggs = [];
+        res['egg_groups'].forEach(egg => {
+          eggs.push(egg['name']);
+        });
+        pokemon['eggs'] = eggs;
+      });
+    });
   }
 
   displayPokemons() {
+    if (this.pokemons.length === 0) {
+      this.err = true;
+    }
+    this.maxPage = Math.ceil(this.pokemons.length / 12);
+    this.maxValue = this.pokemons.length - 1;
     this.currentPokemons = this.pokemons.slice(
       this.currentBottom,
       this.currentTop
     );
     console.log(this.currentPokemons);
     this.loading = false;
+    if (this.pokemons.length !== 0) {
+      this.err = false;
+    }
   }
 
   goToSorted(textValue: string) {
@@ -188,160 +209,84 @@ export class PokemonsComponent implements OnInit {
       this.currentBottom = 0;
       this.currentTop = 12;
     } else if (textValue === 'last') {
-      this.currentBottom += 804;
-      this.currentTop += 807;
+      this.currentBottom = 12 * (this.maxPage - 1);
+      this.currentTop = this.currentBottom + 12;
     }
     if (this.currentBottom < 0 || this.currentTop < 12) {
       this.currentBottom = 0;
       this.currentTop = 12;
     }
-    if (this.currentTop > 807 || this.currentBottom > 804) {
-      this.currentTop = 807;
-      this.currentBottom = 804;
+    if (
+      this.currentTop > this.maxValue ||
+      this.currentBottom > 12 * (this.maxPage - 1)
+    ) {
+      this.currentBottom = 12 * (this.maxPage - 1);
+      this.currentTop = this.currentBottom + 12;
     }
     this.displayPokemons();
   }
-  /////////////////////////////////////////////
 
-  getByEggs(url: string) {
-    let list = [];
-    this.http.get(url).subscribe(response => {
-      let pokemons: any[] = [];
-      pokemons = response['pokemon_species'];
-      pokemons.forEach(el => {
-        let eggs = [];
-        this.http.get(el['url']).subscribe(pok => {
-          pok['egg_groups'].forEach(egg => {
-            eggs.push(egg.name);
-          });
-          // console.log('eggtypes: ', eggs);
-          // console.log(pok['varieties'][0]['pokemon']['url']);
-          this.http
-            .get(pok['varieties'][0]['pokemon']['url'])
-            .subscribe(res => {
-              //powtoreczka tego co w funkcji wyzej
-              let types = [];
-              res['types'].forEach(element => {
-                let el = element.type.name;
-                types.push(el);
-              });
-              let num = this.threeDigitNumber(res['id']);
-              let photo = `http://assets.pokemon.com/assets/cms2/img/pokedex/detail/${num}.png`;
-              let set = new View(
-                res['name'],
-                num,
-                res['id'],
-                photo,
-                types,
-                eggs
-              );
-              list.push(set);
-            });
-        });
-      });
+  getFilters() {
+    let x = document.querySelectorAll('.marked');
+    let types: string[] = [];
+    let eggs: string[] = [];
+    x.forEach(element => {
+      let type = element.id.split('/')[5];
+      if (type === 'type') {
+        types.push(element.innerHTML);
+      } else {
+        eggs.push(element.innerHTML);
+      }
     });
-    console.log(list);
-    return list;
+    return [types, eggs];
   }
 
   displayFiltered() {
+    this.loading = true;
+    let arr = this.getFilters();
+    let types: string[] = arr[0];
+    let eggs: string[] = arr[1];
+    if (types.length === 0 && eggs.length === 0) {
+      this.initialPokemonsLoad(this.defaultUrl);
+      return 0;
+    }
+    // podzielic tu funkcje zeby po kliknieciu na ikonke typu mozna bylo tu dolaczyc i przefiltrowac po ikonce
     this.currentPokemons = [];
     this.pokemons = [];
-    let x = document.querySelectorAll('.marked');
-    console.log(x);
-    //dla typow
-    x.forEach(el => {
-      let url = el.getAttribute('id');
-      this.http.get(url).subscribe(res => {
-        let name = res['name'];
-        console.log(name);
-        res['pokemon'].forEach(pok => {
-          this.pokemons.push(pok['pokemon']['name']);
-        });
-      });
-      console.log(this.pokemons);
-    });
+    this.nameSorted(2, 'id');
+    this.sorting = true;
+    const newList = [];
     setTimeout(() => {
-      let arr = new Set(this.pokemons);
-      console.log(arr);
-      console.log(this.pokemons.length);
-    }, 1000);
-
-    // const fs = require('fs');
-    // let arr = [];
-    // let eggs: object[] = [];
-    // // let eggs = new Set(arr);
-    // let types = new Set(arr);
-    // let colors = new Set(arr);
-    // let ad: object[] = [];
-    // let notvisited = true;
-    // pairs.forEach(pair => {
-    //   if (pair[1] === 'egg-group') {
-    //     setTimeout(() => {
-    //       ad = this.getByEggs(pair[0]);
-
-    //       console.log(ad);
-    //       if (notvisited) {
-    //         console.log('weszlo');
-    //         notvisited = false;
-    //       } else {
-    //         console.log(ad);
-    //         for (let i = 0; i < this.eggs.length; i++) {
-    //           for (let j = 0; j < ad.length; j++) {
-    //             console.log(this.eggs[i]['num']);
-    //             if (this.eggs[i]['num'] === ad[j]['num']) {
-    //               arr.push(eggs[i]);
-    //             }
-    //           }
-    //         }
-    //         this.eggs = [...this.eggs, ...ad];
-    //         console.log(arr);
-    //       }
-    //     }, 3000);
-    // ad = this.getByEggs(pair[0]);
-
-    // console.log(ad);
-    // if (notvisited) {
-    //   console.log('weszlo');
-    //   notvisited = false;
-    // } else {
-
-    //     console.log(ad);
-    //     for (let i = 0; i < this.eggs.length; i++) {
-    //       for (let j = 0; j < ad.length; j++) {
-    //         console.log(this.eggs[i]['num']);
-    //         if (this.eggs[i]['num'] === ad[j]['num']) {
-    //           arr.push(eggs[i]);
-    //         }
-    //       }
-    //     }
-    //     this.eggs = [...this.eggs, ...ad];
-    //     console.log(arr);
-
-    // console.log(this.eggs[0]);
-    // let arr = new Set([]);
-
-    // console.log(this.eggs[0]);
-    // // let arr = new Set([]);
-    // for (let i = 0; i < this.eggs.length; i++) {
-    //   for (let j = 0; j < ad.length; j++) {
-    //     console.log(this.eggs[i]['num']);
-    //     if (this.eggs[i]['num'] === ad[j]['num']) {
-    //       arr.push(eggs[i]);
-    //     }
-    //   }
-    // }
-    // this.eggs = [...this.eggs, ...ad];
-    // }
-    // console.log('eggs', this.eggs);
-    // });
-    //  else if (pair[1] === 'type') {
-    //   types.add(pair[0]);
-    // } else {
-    //   colors.add(pair[0]);
-    // }
-    // });
-    // console.log(this.eggs);
-    //rozroznyc egg type, color, type po nadawanych roznych kolorach
+      for (let i = 0; i < 807; i++) {
+        let pokeType = this.pokemons[i].type;
+        let pokeEgg = this.pokemons[i].eggs;
+        if (types.length === 0) {
+          if (eggs.some(x => pokeEgg.includes(x))) {
+            newList.push(this.pokemons[i]);
+          }
+        } else if (eggs.length === 0) {
+          if (types.some(x => pokeType.includes(x))) {
+            newList.push(this.pokemons[i]);
+          }
+        } else {
+          if (
+            types.some(x => pokeType.indexOf(x) >= 0) &&
+            eggs.some(x => pokeEgg.indexOf(x) >= 0)
+          ) {
+            newList.push(this.pokemons[i]);
+          }
+        }
+      }
+      this.pokemons = newList;
+    }, 7800);
+    setTimeout(() => {
+      console.log(this.pokemons);
+    }, 7800);
+    setTimeout(() => {
+      this.displayPokemons();
+    }, 8500);
+    if (this.pokemons.length !== 0) {
+      this.err = false;
+    }
   }
 }

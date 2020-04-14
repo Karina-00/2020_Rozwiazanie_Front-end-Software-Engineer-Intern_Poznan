@@ -29,6 +29,9 @@ nav {
   padding: 30px;
   overflow-y: auto;
   height: 600px;
+  i {
+    color: black;
+  }
 }
 
 .tab-content::-webkit-scrollbar {
