@@ -2,14 +2,41 @@
 @import '../../styles.scss';
 
 header {
-  background-color: #dc3545c2;
+  background-color: $color-red;
   margin-bottom: 50px;
+  border-bottom: 2px solid black;
+}
+
+.btn-pokeball {
+  width: 100px;
+  height: 100px;
+  border-radius: 100px;
+  border: 6px solid black;
+  position: relative;
+  top: 50px;
+  left: calc((100vw - 100px) / 2);
+  background-color: white;
+  outline: none;
+  opacity: 1;
+}
+.small-circle {
+  width: 50px;
+  height: 50px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.input-group-append i {
+  color: black;
+  font-size: 20px;
 }
 
 h1 {
   text-align: center;
   padding: 30px;
-  font-size: 50px;
+  font-size: 60px;
+  color: black;
 }
 
 .mat-chip-list {
@@ -21,17 +48,17 @@ h1 {
 }
 
 .form-control::placeholder {
-  font-size: 0.95rem;
-  color: #aaa;
+  font-size: 0.9rem;
+  color: #00000095;
   font-style: italic;
 }
 
 .search {
   margin: auto;
   width: 400px;
-  position: relative;
   top: 20px;
-  border: 1px solid #00000026;
+  font-family: 'Comfortaa', cursive;
+  border: 2px solid black !important;
 }
 
 .search input::-webkit-search-cancel-button {
@@ -89,11 +116,14 @@ h1 {
 }
 
 .marked {
-  background-color: #dc3545c2 !important;
+  background-color: $color-red !important;
 }
 
 @media screen and(max-width: 430px) {
   .search {
-    width: 300px;
+    width: 280px;
+  }
+  h1 {
+    font-size: 50px;
   }
 }

@@ -2,7 +2,7 @@
   <div
     class="card shadow"
     style="width: 18rem;"
-    *ngFor="let pokemon of sortBy('num')"
+    *ngFor="let pokemon of currentPokemons"
     routerLink="{{ pokemon.num }}"
     routerLinkActive="active"
     [routerLinkActiveOptions]="{ exact: true }"
@@ -36,7 +36,7 @@
 </span>
 
 <nav aria-label="Page navigation">
-  <ul class="pagination">
+  <ul class="pagination" *ngIf="!sorting">
     <li class="page-item" *ngIf="previous !== null" (click)="goToUrl(first)">
       <a class="page-link" aria-label="Previous">
         <span aria-hidden="true"><i class="fas fa-angle-double-left"></i></span>
@@ -56,12 +56,41 @@
       </a>
     </li>
   </ul>
-</nav>
 
-<!-- <div>
-  Icons made by
-  <a href="https://www.flaticon.com/authors/those-icons" title="Those Icons"
-    >Those Icons</a
-  >
-  from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
-</div> -->
+  <ul class="pagination" *ngIf="sorting">
+    <li
+      class="page-item"
+      *ngIf="currentBottom != 0"
+      (click)="goToSorted('first')"
+    >
+      <a class="page-link" aria-label="Previous">
+        <span aria-hidden="true"><i class="fas fa-angle-double-left"></i></span>
+      </a>
+    </li>
+    <li
+      class="page-item"
+      *ngIf="currentBottom != 0"
+      (click)="goToSorted('previous')"
+    >
+      <a class="page-link"><i class="fas fa-angle-left"></i></a>
+    </li>
+    <li
+      class="page-item"
+      *ngIf="currentTop != 807"
+      (click)="goToSorted('next')"
+    >
+      <a class="page-link"><i class="fas fa-angle-right"></i></a>
+    </li>
+    <li
+      class="page-item"
+      *ngIf="currentTop != 807"
+      (click)="goToSorted('last')"
+    >
+      <a class="page-link" aria-label="Next">
+        <span aria-hidden="true"
+          ><i class="fas fa-angle-double-right"></i
+        ></span>
+      </a>
+    </li>
+  </ul>
+</nav>

@@ -81,6 +81,10 @@ export class TopbarComponent implements OnInit {
     event.target.classList.toggle('marked');
   }
 
+  sortData(val) {
+    this.displayFilteredData.emit(val);
+  }
+
   searchPokemon() {
     let value: string = this.search.nativeElement.value;
     value = value.toLowerCase();

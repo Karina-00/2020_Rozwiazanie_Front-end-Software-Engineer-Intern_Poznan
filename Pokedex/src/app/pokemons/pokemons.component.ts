@@ -43,6 +43,9 @@ export class PokemonsComponent implements OnInit {
   loading: boolean = false;
   eggs: object[] = [];
   err: boolean = false;
+  sorting: boolean = false;
+  currentTop: number = 12;
+  currentBottom: number = 0;
 
   constructor(
     private pokeapiService: PokeapiService,
@@ -56,6 +59,7 @@ export class PokemonsComponent implements OnInit {
   }
 
   initialPokemonsLoad(url: string) {
+    this.sorting = false;
     this.err = false;
     this.loading = true;
     this.currentPokemons = [];
@@ -85,6 +89,7 @@ export class PokemonsComponent implements OnInit {
     let photo = this.pokeapiService.getphoto(num);
     let set = new View(pokemon['name'], num, pokemon['id'], photo, types);
     this.currentPokemons.push(set);
+    this.sortBy('num');
   }
 
   threeDigitNumber(num: number) {
@@ -116,7 +121,88 @@ export class PokemonsComponent implements OnInit {
       err => (this.err = true)
     );
   }
-  ////////////////////////////////////////////////
+
+  displaySorted(val) {
+    this.loading = true;
+    this.sorting = true;
+    if (val === 'nameAsc') {
+      this.nameSorted(2, 'name');
+    } else if (val === 'nameDesc') {
+      this.nameSorted(1, 'name');
+    } else if (val === 'indexAsc') {
+      console.log('l');
+      this.initialPokemonsLoad(this.defaultUrl);
+    } else {
+      this.nameSorted(1, 'id');
+    }
+  }
+
+  nameSorted(num: number, key: string) {
+    this.loading = true;
+    this.pokemons = [];
+    this.currentPokemons = [];
+    this.currentBottom = 0;
+    this.currentTop = 12;
+    const promises = [];
+    for (let i = 1; i <= 807; i++) {
+      const url = `${this.pokeapiService.urlTemplate}pokemon/${i}`;
+      promises.push(fetch(url).then(res => res.json()));
+    }
+    Promise.all(promises).then(results => {
+      this.pokemons = results
+        .map(result => ({
+          img: this.pokeapiService.getphoto(this.threeDigitNumber(result.id)),
+          name: result.name,
+          id: result.id,
+          num: this.threeDigitNumber(result.id),
+          type: result.types.map(type => type.type.name),
+        }))
+        .sort((a, b) =>
+          a[key] > b[key] ? Math.pow(-1, num) : Math.pow(-1, num + 1)
+        );
+      console.log(this.pokemons);
+    });
+    setTimeout(() => {
+      this.displayPokemons();
+    }, 5000);
+  }
+
+  displayPokemons() {
+    this.currentPokemons = this.pokemons.slice(
+      this.currentBottom,
+      this.currentTop
+    );
+    console.log(this.currentPokemons);
+    this.loading = false;
+  }
+
+  goToSorted(textValue: string) {
+    this.loading = true;
+    if (textValue === 'next') {
+      this.currentBottom += 12;
+      this.currentTop += 12;
+    } else if (textValue === 'previous') {
+      this.currentBottom -= 12;
+      this.currentTop -= 12;
+    } else if (textValue === 'first') {
+      this.currentBottom = 0;
+      this.currentTop = 12;
+    } else if (textValue === 'last') {
+      this.currentBottom += 804;
+      this.currentTop += 807;
+    }
+    if (this.currentBottom < 0 || this.currentTop < 12) {
+      this.currentBottom = 0;
+      this.currentTop = 12;
+    }
+    if (this.currentTop > 807 || this.currentBottom > 804) {
+      this.currentTop = 807;
+      this.currentBottom = 804;
+    }
+    this.displayPokemons();
+  }
+  /////////////////////////////////////////////
+
   getByEggs(url: string) {
     let list = [];
     this.http.get(url).subscribe(response => {

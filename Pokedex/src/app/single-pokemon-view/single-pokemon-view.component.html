@@ -60,7 +60,7 @@
         <div class="pokemon-about__property">
           <p><img src="../../assets/icons/skill.svg" /> Abilities</p>
           <ul *ngFor="let ability of abilities">
-            <span>{{ ability.name }}:</span
+            <span>{{ ability.name | titlecase }}</span
             ><br />
             <small>{{ ability.description }}</small>
           </ul>
@@ -69,7 +69,7 @@
           <p><i class="fas fa-egg"></i> Eggs</p>
           <ul *ngFor="let egg of eggs">
             {{
-              egg
+              egg | titlecase
             }}
           </ul>
         </div>
@@ -78,7 +78,7 @@
       <!-- STATS -->
       <div class="tab-pane fade" id="nav-stats" role="tabpanel">
         <div class="pokemon-stat" *ngFor="let stat of stats">
-          {{ stat.name }}: {{ stat.description }}
+          {{ stat.name | titlecase }}: {{ stat.description }}
           <div class="progress shadow-sm">
             <div
               class="progress-bar progress-bar-striped bg-{{

@@ -1,4 +1,4 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PokeapiService } from '../_services/pokeapi.service';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -49,8 +49,7 @@ export class SinglePokemonViewComponent implements OnInit {
   constructor(
     private pokeapiService: PokeapiService,
     private router: Router,
-    private http: HttpClient,
-    private ngZone: NgZone
+    private http: HttpClient
   ) {
     this.pokemonSetUp();
     setTimeout(() => {
@@ -93,7 +92,7 @@ export class SinglePokemonViewComponent implements OnInit {
       setTimeout(() => {
         let ability = new Ability(name, description);
         this.abilities.push(ability);
-      }, 100);
+      }, 500);
     });
   }
 
@@ -192,6 +191,7 @@ export class SinglePokemonViewComponent implements OnInit {
   }
 
   redirect(dest) {
+    this.loading = true;
     if (dest === 'next') {
       this.currentIndex += 1;
     } else {
