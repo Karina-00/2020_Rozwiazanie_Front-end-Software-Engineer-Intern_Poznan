@@ -1,0 +1,97 @@
+<h4 *ngIf="sorting && !loading">{{ pokemons.length }} results</h4>
+<div class="container" *ngIf="!loading">
+  <div
+    class="card shadow"
+    style="width: 18rem;"
+    *ngFor="let pokemon of currentPokemons"
+    routerLink="{{ pokemon.num }}"
+    routerLinkActive="active"
+    [routerLinkActiveOptions]="{ exact: true }"
+  >
+    <div class="pokemon-name">
+      <h4>#{{ pokemon.id }}</h4>
+      <h3>{{ pokemon.name | titlecase }}</h3>
+      <mat-chip-list>
+        <mat-chip *ngFor="let type of pokemon.type" class="pokemon-type">
+          {{ type }}</mat-chip
+        >
+      </mat-chip-list>
+    </div>
+    <div class="img">
+      <img
+        class="card-img-top"
+        [src]="pokemon.img"
+        [alt]="pokemon.name | titlecase"
+      />
+    </div>
+  </div>
+
+  <div class="error_message" *ngIf="err">
+    <img src="../../assets/sad-pikachu.png" />
+    <p>There's no such pokemon</p>
+  </div>
+</div>
+
+<span *ngIf="loading">
+  <img class="pokeball" src="../../assets/pokaball.png" />
+</span>
+
+<nav aria-label="Page navigation" *ngIf="!loading">
+  <ul class="pagination" *ngIf="!sorting">
+    <li class="page-item" *ngIf="previous !== null" (click)="goToUrl(first)">
+      <a class="page-link" aria-label="Previous">
+        <span aria-hidden="true"><i class="fas fa-angle-double-left"></i></span>
+      </a>
+    </li>
+    <li class="page-item" *ngIf="previous !== null" (click)="goToUrl(previous)">
+      <a class="page-link"><i class="fas fa-angle-left"></i></a>
+    </li>
+    <li class="page-item" *ngIf="next !== last" (click)="goToUrl(next)">
+      <a class="page-link"><i class="fas fa-angle-right"></i></a>
+    </li>
+    <li class="page-item" *ngIf="next !== last" (click)="goToUrl(last)">
+      <a class="page-link" aria-label="Next">
+        <span aria-hidden="true"
+          ><i class="fas fa-angle-double-right"></i
+        ></span>
+      </a>
+    </li>
+  </ul>
+
+  <ul class="pagination" *ngIf="sorting && !loading">
+    <li
+      class="page-item"
+      *ngIf="currentBottom != 0"
+      (click)="goToSorted('first')"
+    >
+      <a class="page-link" aria-label="Previous">
+        <span aria-hidden="true"><i class="fas fa-angle-double-left"></i></span>
+      </a>
+    </li>
+    <li
+      class="page-item"
+      *ngIf="currentBottom != 0"
+      (click)="goToSorted('previous')"
+    >
+      <a class="page-link"><i class="fas fa-angle-left"></i></a>
+    </li>
+    <li
+      class="page-item"
+      *ngIf="currentTop <= maxValue"
+      (click)="goToSorted('next')"
+    >
+      <a class="page-link"><i class="fas fa-angle-right"></i></a>
+    </li>
+    <li
+      class="page-item"
+      *ngIf="currentTop <= maxValue"
+      (click)="goToSorted('last')"
+    >
+      <a class="page-link" aria-label="Next">
+        <span aria-hidden="true"
+          ><i class="fas fa-angle-double-right"></i
+        ></span>
+      </a>
+    </li>
+  </ul>
+</nav>

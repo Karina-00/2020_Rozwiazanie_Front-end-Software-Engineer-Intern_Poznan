@@ -1,4 +1,4 @@
-@import "../src/variables.scss";
+@import '../src/variables.scss';
 
 * {
   box-sizing: border-box;
@@ -7,8 +7,58 @@
 body {
   margin: 0;
 }
-
+h1,
+h2,
+h3,
+h4 {
+  font-family: 'Comfortaa', cursive;
+}
 .picture {
   width: 100%;
   height: 100%;
+}
+
+body::-webkit-scrollbar {
+  width: 10px;
+}
+
+body::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 20px #e0e0e0;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: #00000026;
+  border: 1px solid #707070;
+  border-radius: 20px;
+}
+
+.icon {
+  opacity: 0.9;
+}
+
+.icon:hover {
+  opacity: 1;
+}
+.icon:active {
+  transform: scale(0.95);
+}
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
+.error {
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  &:hover {
+    filter: saturate(150%);
+  }
 }

@@ -1,0 +1,145 @@
+<div class="container-fluid" *ngIf="!loading && num < 808">
+  <header>
+    <h3 class="pokemon-id">#{{ id }}</h3>
+    <h1 class="pokemon-name">{{ name | titlecase }}</h1>
+    <div class="pokemon-types__wrapper">
+      <div class="type-icon {{ type }} pokemon-type" *ngFor="let type of types">
+        <img src="../../assets/types_icons/{{ type }}.svg" />
+        <p>{{ type }}</p>
+      </div>
+    </div>
+    <div class="img__wrapper">
+      <img [src]="photo" />
+    </div>
+  </header>
+
+  <nav>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+      <a
+        class="nav-item nav-link active"
+        id="nav-profile-tab"
+        data-toggle="tab"
+        href="#nav-profile"
+        role="tab"
+        aria-selected="true"
+      >
+        About
+      </a>
+      <a
+        class="nav-item nav-link"
+        id="nav-stats-tab"
+        data-toggle="tab"
+        href="#nav-stats"
+        role="tab"
+        >Base stats</a
+      >
+      <a
+        class="nav-item nav-link"
+        id="nav-evolution-tab"
+        data-toggle="tab"
+        href="#nav-evolution"
+        role="tab"
+        >Evolution</a
+      >
+    </div>
+
+    <div class="tab-content" id="nav-tabContent">
+      <!-- ABOUT -->
+      <div class="tab-pane fade show active" id="nav-profile" role="tabpanel">
+        <div class="pokemon-about__property">
+          <p>
+            <img src="../../assets/icons/height.svg" /> Height: {{ height }}m
+          </p>
+        </div>
+        <div class="pokemon-about__property">
+          <p><img src="../../assets/icons/kg.svg" /> Weight: {{ weight }}kg</p>
+        </div>
+        <div class="pokemon-about__property">
+          <p><i class="fas fa-palette"></i> Color: {{ color }}</p>
+        </div>
+        <div class="pokemon-about__property">
+          <p><img src="../../assets/icons/skill.svg" /> Abilities</p>
+          <ul *ngFor="let ability of abilities">
+            <span>{{ ability.name | titlecase }}</span
+            ><br />
+            <small>{{ ability.description }}</small>
+          </ul>
+        </div>
+        <div class="pokemon-about__property">
+          <p><i class="fas fa-egg"></i> Eggs</p>
+          <ul *ngFor="let egg of eggs">
+            {{
+              egg | titlecase
+            }}
+          </ul>
+        </div>
+      </div>
+
+      <!-- STATS -->
+      <div class="tab-pane fade" id="nav-stats" role="tabpanel">
+        <div class="pokemon-stat" *ngFor="let stat of stats">
+          {{ stat.name | titlecase }}: {{ stat.description }}
+          <div class="progress shadow-sm">
+            <div
+              class="progress-bar progress-bar-striped bg-{{
+                updateColor(stat.num)
+              }} progress-bar-animated"
+              role="progressbar"
+              [style.width]="stat.num + '%'"
+            ></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EVOLUTION -->
+      <div class="tab-pane fade" id="nav-evolution" role="tabpanel">
+        <div class="pokemon-evolution">
+          <div class="img__wrapper img__small" *ngFor="let evol of evolutions">
+            <a href="pokedex/{{ evol.num }}"
+              ><img [src]="evol.description" />
+              <p>{{ evol.name | titlecase }}</p></a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <!-- NEXT, PREVIOUS, RETURN -->
+  <a
+    class="go-back icon"
+    routerLink="/pokedex"
+    routerLinkActive="active"
+    [routerLinkActiveOptions]="{ exact: true }"
+  >
+    <i class="fas fa-long-arrow-alt-left"></i>
+  </a>
+  <a
+    *ngIf="num < 807"
+    class="icon arrow right"
+    (click)="redirect('next')"
+    routerLink="/pokedex/{{ num + 1 }}"
+    routerLinkActive="active"
+    [routerLinkActiveOptions]="{ exact: true }"
+  >
+    <i class="fas fa-chevron-right"></i>
+  </a>
+  <a
+    *ngIf="num > 1"
+    class="icon arrow left"
+    (click)="redirect('previous')"
+    routerLink="/pokedex/{{ num - 1 }}"
+    routerLinkActive="active"
+    [routerLinkActiveOptions]="{ exact: true }"
+  >
+    <i class="fas fa-chevron-left"></i>
+  </a>
+</div>
+
+<div class="error" *ngIf="err">
+  <img src="../../assets/sad-pikachu.png" />
+  <p>There's no such pokemon</p>
+</div>
+
+<span *ngIf="loading">
+  <img class="pokeball" src="assets/pokaball.png" />
+</span>

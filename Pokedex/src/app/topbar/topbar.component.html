@@ -1,0 +1,103 @@
+<header>
+  <div
+    class="search input-group border rounded-pill p-1 shadow-sm bg-white rounded"
+  >
+    <input
+      type="search"
+      placeholder="Search your pokemon..."
+      class="form-control bg-none border-0 rounded-pill"
+      (keyup.enter)="searchPokemon()"
+      #search
+    />
+    <div class="input-group-append">
+      <button
+        type="button"
+        class="btn btn-link text-danger icon"
+        (click)="searchPokemon()"
+      >
+        <i class="fa fa-search"></i>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <nav>
+    <div class="categories">
+      <div class="dropdown categories__sort shadow-sm">
+        <button
+          class="btn btn-secondary dropdown-toggle shadow-sm icon"
+          type="button"
+          id="dropdownMenuButton"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          Sort by <i class="fas fa-list-ol"></i>
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item icon" (click)="sortData('indexAsc')"
+            ><i class="fas fa-arrow-up"></i> Index number
+          </a>
+          <a class="dropdown-item icon" (click)="sortData('indexDesc')"
+            ><i class="fas fa-arrow-down"></i> Index number
+          </a>
+          <a class="dropdown-item icon" (click)="sortData('nameAsc')"
+            ><i class="fas fa-sort-alpha-up-alt"></i> Name A-Z</a
+          >
+          <a class="dropdown-item icon" (click)="sortData('nameDesc')"
+            ><i class="fas fa-sort-alpha-down-alt"></i> Name Z-A</a
+          >
+        </div>
+      </div>
+
+      <div class="dropdown categories__filter shadow-sm">
+        <button
+          class="btn btn-secondary dropdown-toggle shadow-sm icon"
+          type="button"
+          id="dropdownMenuButton"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          Filter <i class="fas fa-filter"></i>
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item icon" (click)="showTypes()"
+            ><i class="fas fa-splotch"></i> Type</a
+          >
+          <a class="dropdown-item icon" (click)="showAlphabet()"
+            ><i class="fas fa-font"></i> First letter</a
+          >
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="categories-response"
+      *ngFor="let category of categories; let i = index"
+    >
+      <div>{{ category.name }}</div>
+      <i
+        class="fas fa-times icon close"
+        (click)="closeCategory(i, category.name)"
+      ></i>
+      <mat-chip-list>
+        <mat-chip
+          *ngFor="let type of category.arr"
+          [id]="type.url"
+          (click)="clickedType($event)"
+          >{{ type.name }}</mat-chip
+        >
+      </mat-chip-list>
+    </div>
+    <button
+      *ngIf="categories.length > 0"
+      class="btn btn-secondary apply-btn shadow-sm icon"
+      type="button"
+      (click)="applyFilters()"
+    >
+      Apply <i class="fas fa-check"></i>
+    </button>
+  </nav>
+</div>
