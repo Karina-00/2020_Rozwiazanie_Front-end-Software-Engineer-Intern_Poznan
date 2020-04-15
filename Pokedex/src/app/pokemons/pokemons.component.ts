@@ -7,23 +7,20 @@ class View {
   name: string;
   id: string;
   num: number;
-  type: any[];
-  eggs: any[] = null;
+  type: string[];
 
   constructor(
     name: string,
     id: string,
     num: number,
     img: string,
-    type: any[],
-    eggs: any[] = null
+    type: string[]
   ) {
     this.name = name;
     this.id = id;
     this.num = num;
     this.img = img;
     this.type = type;
-    this.eggs = eggs;
   }
 }
 
@@ -38,10 +35,8 @@ export class PokemonsComponent implements OnInit {
   next: string;
   first: string = 'https://pokeapi.co/api/v2/pokemon?offset=0&limit=12';
   previous: string;
-  currentUrl: string;
   last: string = 'https://pokeapi.co/api/v2/pokemon?offset=800&limit=12"';
   loading: boolean = false;
-  eggs: object[] = [];
   err: boolean = false;
   sorting: boolean = false;
   currentTop: number = 12;
@@ -54,7 +49,7 @@ export class PokemonsComponent implements OnInit {
     private http: HttpClient
   ) {}
 
-  public defaultUrl: string = `${this.pokeapiService.urlTemplate}pokemon/?limit=12&offset=0`;
+  defaultUrl: string = `${this.pokeapiService.urlTemplate}pokemon/?limit=12&offset=0`;
 
   ngOnInit() {
     this.initialPokemonsLoad(this.defaultUrl);
@@ -126,9 +121,10 @@ export class PokemonsComponent implements OnInit {
 
   displaySorted(val) {
     this.loading = true;
-    this.sorting = true;
-    this.pokemons = [];
-    this.currentPokemons = [];
+    if (!this.sorting) {
+      this.pokemons = [];
+      this.currentPokemons = [];
+    }
     this.currentBottom = 0;
     this.currentTop = 12;
     if (val === 'nameAsc') {
@@ -136,48 +132,45 @@ export class PokemonsComponent implements OnInit {
     } else if (val === 'nameDesc') {
       this.nameSorted(1, 'name');
     } else if (val === 'indexAsc') {
-      this.initialPokemonsLoad(this.defaultUrl);
+      if (this.sorting) {
+        this.nameSorted(2, 'id');
+      } else {
+        this.initialPokemonsLoad(this.defaultUrl);
+      }
     } else {
       this.nameSorted(1, 'id');
     }
   }
 
   nameSorted(num: number, key: string) {
-    const promises = [];
-    for (let i = 1; i <= 807; i++) {
-      const url = `${this.pokeapiService.urlTemplate}pokemon/${i}`;
-      promises.push(fetch(url).then(res => res.json()));
-    }
-    Promise.all(promises).then(results => {
-      this.pokemons = results
-        .map(result => ({
-          img: this.pokeapiService.getphoto(this.threeDigitNumber(result.id)),
-          name: result.name,
-          id: result.id,
-          num: this.threeDigitNumber(result.id),
-          type: result.types.map(type => type.type.name),
-        }))
-        .sort((a, b) =>
-          a[key] > b[key] ? Math.pow(-1, num) : Math.pow(-1, num + 1)
-        );
-    });
-    setTimeout(() => {
-      this.addEggs();
-      this.displayPokemons();
-      console.log(this.pokemons);
-    }, 7000);
-  }
-
-  addEggs() {
-    this.pokemons.forEach(pokemon => {
-      this.pokeapiService.getPokemonSpecies(pokemon['id']).subscribe(res => {
-        let eggs = [];
-        res['egg_groups'].forEach(egg => {
-          eggs.push(egg['name']);
-        });
-        pokemon['eggs'] = eggs;
+    if (!this.sorting) {
+      const promises = [];
+      for (let i = 1; i <= 807; i++) {
+        const url = `${this.pokeapiService.urlTemplate}pokemon/${i}`;
+        promises.push(fetch(url).then(res => res.json()));
+      }
+      Promise.all(promises).then(results => {
+        this.pokemons = results
+          .map(result => ({
+            img: this.pokeapiService.getphoto(this.threeDigitNumber(result.id)),
+            name: result.name,
+            id: result.id,
+            num: this.threeDigitNumber(result.id),
+            type: result.types.map(type => type.type.name),
+          }))
+          .sort((a, b) =>
+            a[key] > b[key] ? Math.pow(-1, num) : Math.pow(-1, num + 1)
+          );
       });
-    });
+    } else {
+      this.pokemons.sort((a, b) =>
+        a[key] > b[key] ? Math.pow(-1, num) : Math.pow(-1, num + 1)
+      );
+    }
+    this.sorting = true;
+    setTimeout(() => {
+      this.displayPokemons();
+    }, 7000);
   }
 
   displayPokemons() {
@@ -226,67 +219,73 @@ export class PokemonsComponent implements OnInit {
     this.displayPokemons();
   }
 
+  applyFilters(types, letters) {
+    const promises = [];
+    for (let i = 1; i <= 807; i++) {
+      const url = `${this.pokeapiService.urlTemplate}pokemon/${i}`;
+      promises.push(fetch(url).then(res => res.json()));
+    }
+    Promise.all(promises).then(results => {
+      this.pokemons = results
+        .map(result => ({
+          img: this.pokeapiService.getphoto(this.threeDigitNumber(result.id)),
+          name: result.name,
+          id: result.id,
+          num: this.threeDigitNumber(result.id),
+          type: result.types.map(type => type.type.name),
+          letter: result.name[0],
+        }))
+        .filter(pokemon => {
+          if (types.length === 0) {
+            console.log('tylko literki');
+            return letters.includes(pokemon.letter);
+          } else if (letters.length === 0) {
+            console.log('tylko typy');
+            return types.some(x => pokemon.type.includes(x));
+          } else {
+            console.log('oba');
+            return (
+              types.some(x => pokemon.type.includes(x)) &&
+              letters.includes(pokemon.letter)
+            );
+          }
+        });
+    });
+    setTimeout(() => {
+      console.log(this.pokemons);
+      this.currentBottom = 0;
+      this.currentTop = 12;
+      this.displayPokemons();
+    }, 7000);
+  }
+
   getFilters() {
     let x = document.querySelectorAll('.marked');
     let types: string[] = [];
-    let eggs: string[] = [];
+    let letters: string[] = [];
     x.forEach(element => {
       let type = element.id.split('/')[5];
       if (type === 'type') {
         types.push(element.innerHTML);
       } else {
-        eggs.push(element.innerHTML);
+        letters.push(element.innerHTML.toLowerCase());
       }
     });
-    return [types, eggs];
+    return [types, letters];
   }
 
   displayFiltered() {
     this.loading = true;
     let arr = this.getFilters();
     let types: string[] = arr[0];
-    let eggs: string[] = arr[1];
-    if (types.length === 0 && eggs.length === 0) {
+    let letters: string[] = arr[1];
+    if (types.length === 0 && letters.length === 0) {
       this.initialPokemonsLoad(this.defaultUrl);
       return 0;
     }
-    // podzielic tu funkcje zeby po kliknieciu na ikonke typu mozna bylo tu dolaczyc i przefiltrowac po ikonce
+    this.sorting = true;
     this.currentPokemons = [];
     this.pokemons = [];
-    this.nameSorted(2, 'id');
-    this.sorting = true;
-    const newList = [];
-    setTimeout(() => {
-      for (let i = 0; i < 807; i++) {
-        let pokeType = this.pokemons[i].type;
-        let pokeEgg = this.pokemons[i].eggs;
-        if (types.length === 0) {
-          if (eggs.some(x => pokeEgg.includes(x))) {
-            newList.push(this.pokemons[i]);
-          }
-        } else if (eggs.length === 0) {
-          if (types.some(x => pokeType.includes(x))) {
-            newList.push(this.pokemons[i]);
-          }
-        } else {
-          if (
-            types.some(x => pokeType.indexOf(x) >= 0) &&
-            eggs.some(x => pokeEgg.indexOf(x) >= 0)
-          ) {
-            newList.push(this.pokemons[i]);
-          }
-        }
-      }
-      this.pokemons = newList;
-    }, 7800);
-    setTimeout(() => {
-      console.log(this.pokemons);
-    }, 7800);
-    setTimeout(() => {
-      this.displayPokemons();
-    }, 8500);
-    if (this.pokemons.length !== 0) {
-      this.err = false;
-    }
+    this.applyFilters(types, letters);
   }
 }

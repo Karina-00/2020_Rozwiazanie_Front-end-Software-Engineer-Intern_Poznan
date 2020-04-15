@@ -21,13 +21,11 @@ class Category {
 class Type {
   name: string;
   url: string;
-  id: number;
-  type: string;
-  constructor(name: string, url: string, id: number, type: string) {
+  // type: string;
+  constructor(name: string, url: string) {
     this.name = name;
     this.url = url;
-    this.id = id;
-    this.type = type;
+    // this.type = type;
   }
 }
 
@@ -40,22 +38,42 @@ export class TopbarComponent implements OnInit {
   @Output() displayFilteredData: EventEmitter<any> = new EventEmitter();
   @ViewChild('search', { static: false }) search: ElementRef;
 
-  public categories: any[] = [];
-  public setOfTypes: any[] = [];
-  public types: any[] = [];
-  public chosen: any[] = [];
-  public Types: boolean = true;
-  public Eggs: boolean = true;
+  categories: any[] = [];
+  setOfTypes: any[] = [];
+  types: any[] = [];
+  alphabet: string[] = [];
+  chosen: any[] = [];
+  Types: boolean = true;
+  Letters: boolean = true;
 
   constructor(
     private pokeapiService: PokeapiService,
     private http: HttpClient
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    let i;
+    this.alphabet = [...Array(26)].map(
+      _ => String.fromCharCode(i++).toUpperCase(),
+      (i = 97)
+    );
+  }
+
+  showAlphabet() {
+    if (!this.Letters) {
+      return 0;
+    }
+    let letters = [];
+    this.alphabet.forEach(letter => {
+      let x = new Type(letter, `/////${letter}`);
+      letters.push(x);
+    });
+    let y = new Category('Letters', letters);
+    this.categories.push(y);
+    this.Letters = false;
+  }
 
   showResults(element) {
-    //zmienic zeby sie pakowały do konkretnych tablic eggs i types!
     let bool = eval(`this.${element}`);
     if (!bool) {
       return 0;
@@ -64,11 +82,9 @@ export class TopbarComponent implements OnInit {
     let x = eval(`this.pokeapiService.get${element}()`);
     x.subscribe(res => {
       let results: any[] = res['results'];
-      let i = 1;
       results.forEach(el => {
-        let x = new Type(el['name'], el['url'], i, element);
+        let x = new Type(el['name'], el['url']);
         types.push(x);
-        i++;
       });
     });
     let y = new Category(element, types);
@@ -99,7 +115,7 @@ export class TopbarComponent implements OnInit {
 
   closeFilters() {
     this.closeCategory(0, 'Types');
-    this.closeCategory(0, 'Eggs');
+    this.closeCategory(0, 'Letters');
   }
 
   closeCategory(i, category) {

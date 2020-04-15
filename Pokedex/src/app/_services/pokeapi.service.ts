@@ -26,16 +26,4 @@ export class PokeapiService {
   ) {
     return this.http.get(url);
   }
-
-  getEggs() {
-    return this.http.get(`${this.urlTemplate}egg-group/`);
-  }
-
-  getTypes() {
-    return this.http.get(`${this.urlTemplate}type/`);
-  }
-
-  getColors() {
-    return this.http.get(`${this.urlTemplate}pokemon-color/`);
-  }
 }

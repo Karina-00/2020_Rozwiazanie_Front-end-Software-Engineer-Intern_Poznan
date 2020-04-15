@@ -83,6 +83,10 @@ h1 {
   background-color: white;
   border: none;
   border: 1px solid #00000026;
+  margin: 10px 10px 10px calc((100% - 85px) / 2);
+  &:hover {
+    background-color: #ebebeb;
+  }
 }
 
 .apply-btn:active,
