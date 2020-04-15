@@ -6,7 +6,6 @@ import {
   Output,
   EventEmitter,
 } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { PokeapiService } from '../_services/pokeapi.service';
 
 class Category {
@@ -21,11 +20,9 @@ class Category {
 class Type {
   name: string;
   url: string;
-  // type: string;
   constructor(name: string, url: string) {
     this.name = name;
     this.url = url;
-    // this.type = type;
   }
 }
 
@@ -43,13 +40,10 @@ export class TopbarComponent implements OnInit {
   types: any[] = [];
   alphabet: string[] = [];
   chosen: any[] = [];
-  Types: boolean = true;
-  Letters: boolean = true;
+  Types = true;
+  Letters = true;
 
-  constructor(
-    private pokeapiService: PokeapiService,
-    private http: HttpClient
-  ) {}
+  constructor(private pokeapiService: PokeapiService) {}
 
   ngOnInit() {
     let i;
@@ -63,33 +57,29 @@ export class TopbarComponent implements OnInit {
     if (!this.Letters) {
       return 0;
     }
-    let letters = [];
-    this.alphabet.forEach(letter => {
-      let x = new Type(letter, `/////${letter}`);
-      letters.push(x);
+    const letters = this.alphabet.map(letter => {
+      return new Type(letter, `/////${letter}`);
     });
-    let y = new Category('Letters', letters);
-    this.categories.push(y);
+    const letterCategory = new Category('Letters', letters);
+    this.categories.push(letterCategory);
     this.Letters = false;
   }
 
-  showResults(element) {
-    let bool = eval(`this.${element}`);
-    if (!bool) {
+  showTypes() {
+    if (!this.Types) {
       return 0;
     }
-    let types = [];
-    let x = eval(`this.pokeapiService.get${element}()`);
-    x.subscribe(res => {
-      let results: any[] = res['results'];
+    const types = [];
+    this.pokeapiService.getTypes().subscribe(res => {
+      const results: any[] = res['results'];
       results.forEach(el => {
-        let x = new Type(el['name'], el['url']);
+        const x = new Type(el.name, el.url);
         types.push(x);
       });
     });
-    let y = new Category(element, types);
-    this.categories.push(y);
-    eval(`this.${element} = false`);
+    const type = new Category('Types', types);
+    this.categories.push(type);
+    this.Types = false;
   }
 
   clickedType(event) {
@@ -101,16 +91,13 @@ export class TopbarComponent implements OnInit {
   }
 
   sortData(val) {
-    this.closeFilters();
     this.displayFilteredData.emit(val);
   }
 
   searchPokemon() {
     this.closeFilters();
-    let value: string = this.search.nativeElement.value;
-    value = value.toLowerCase();
-    console.log(value);
-    this.displayFilteredData.emit(value);
+    const value: string = this.search.nativeElement.value;
+    this.displayFilteredData.emit(value.toLowerCase());
   }
 
   closeFilters() {

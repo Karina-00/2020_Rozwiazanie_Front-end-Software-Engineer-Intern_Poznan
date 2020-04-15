@@ -27,8 +27,8 @@ class Evolution extends Ability {
 export class SinglePokemonViewComponent implements OnInit {
   currentIndex: number;
   pokemon: object;
-  loading: boolean = false;
-  err: boolean = false;
+  loading = false;
+  err = false;
   photo: string;
   name: string;
   id: string;
@@ -42,9 +42,6 @@ export class SinglePokemonViewComponent implements OnInit {
   color: string;
   generation: string;
   evolutions: object[] = [];
-  baseExp: number;
-  baseHappiness: number;
-  captureRate: number;
 
   constructor(
     private pokeapiService: PokeapiService,
@@ -71,40 +68,46 @@ export class SinglePokemonViewComponent implements OnInit {
         description = res['effect_entries'][0]['effect'];
       });
       setTimeout(() => {
-        let ability = new Ability(name, description);
+        const ability = new Ability(name, description);
         this.abilities.push(ability);
       }, 1500);
     });
   }
 
   getStats(response) {
-    let total: number = 0;
+    let total = 0;
     response.forEach(stat => {
-      let val = stat['base_stat'];
+      const val = stat['base_stat'];
       total += Number(val);
-      let name = stat['stat']['name'];
-      let newStat = new Evolution(name, String(val), val);
+      const name = stat['stat']['name'];
+      const newStat = new Evolution(name, String(val), val);
       this.stats.push(newStat);
     });
-    let newStat = new Evolution('total', String(total), total / 6);
-    this.stats.push(newStat);
+    const totalStat = new Evolution('total', String(total), total / 6);
+    this.stats.push(totalStat);
   }
 
   getEvolution(response) {
     this.http.get(response['url']).subscribe(res => {
-      let name = res['chain']['species']['name'];
-      let id = res['chain']['species']['url'].split('/')[6];
-      let photo = this.pokeapiService.getphoto(this.threeDigitNumber(id));
-      let evolution = new Evolution(name, photo, Number(id));
+      const name = res['chain']['species']['name'];
+      const id = res['chain']['species']['url'].split('/')[6];
+      const photo = this.pokeapiService.getphoto(this.threeDigitNumber(id));
+      const evolution = new Evolution(name, photo, Number(id));
       this.evolutions.push(evolution);
       let x = res['chain']['evolves_to'];
       while (x.length > 0) {
         x.forEach(el => {
-          let name = el['species']['name'];
-          let id = el['species']['url'].split('/')[6];
-          let photo = this.pokeapiService.getphoto(this.threeDigitNumber(id));
-          let evolution = new Evolution(name, photo, Number(id));
-          this.evolutions.push(evolution);
+          const nameNext = el['species']['name'];
+          const idNext = el['species']['url'].split('/')[6];
+          const photoNext = this.pokeapiService.getphoto(
+            this.threeDigitNumber(idNext)
+          );
+          const evolutionNext = new Evolution(
+            nameNext,
+            photoNext,
+            Number(idNext)
+          );
+          this.evolutions.push(evolutionNext);
         });
         x = x[0]['evolves_to'];
       }
@@ -120,7 +123,6 @@ export class SinglePokemonViewComponent implements OnInit {
         this.num = res['id'];
         this.height = res['height'] / 10;
         this.weight = res['weight'] / 10;
-        this.baseExp = res['base_experience'];
         res['types'].forEach(element => {
           this.types.push(element['type']['name']);
         });
@@ -128,8 +130,6 @@ export class SinglePokemonViewComponent implements OnInit {
         this.http.get(res['species']['url']).subscribe(response => {
           this.color = response['color']['name'];
           this.generation = response['generation']['name'];
-          this.captureRate = response['capture_rate'];
-          this.baseHappiness = response['base_happiness'];
           response['egg_groups'].forEach(egg => {
             this.eggs.push(egg['name']);
           });
