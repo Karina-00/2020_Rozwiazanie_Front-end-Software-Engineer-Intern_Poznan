@@ -36,16 +36,16 @@
           Sort by <i class="fas fa-list-ol"></i>
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <a class="dropdown-item" (click)="sortData('indexAsc')"
+          <a class="dropdown-item icon" (click)="sortData('indexAsc')"
             ><i class="fas fa-arrow-up"></i> Index number
           </a>
-          <a class="dropdown-item" (click)="sortData('indexDesc')"
+          <a class="dropdown-item icon" (click)="sortData('indexDesc')"
             ><i class="fas fa-arrow-down"></i> Index number
           </a>
-          <a class="dropdown-item" (click)="sortData('nameAsc')"
+          <a class="dropdown-item icon" (click)="sortData('nameAsc')"
             ><i class="fas fa-sort-alpha-up-alt"></i> Name A-Z</a
           >
-          <a class="dropdown-item" (click)="sortData('nameDesc')"
+          <a class="dropdown-item icon" (click)="sortData('nameDesc')"
             ><i class="fas fa-sort-alpha-down-alt"></i> Name Z-A</a
           >
         </div>
@@ -63,10 +63,10 @@
           Filter <i class="fas fa-filter"></i>
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <a class="dropdown-item" (click)="showResults('Types')"
+          <a class="dropdown-item icon" (click)="showTypes()"
             ><i class="fas fa-splotch"></i> Type</a
           >
-          <a class="dropdown-item" (click)="showAlphabet()"
+          <a class="dropdown-item icon" (click)="showAlphabet()"
             ><i class="fas fa-font"></i> First letter</a
           >
         </div>

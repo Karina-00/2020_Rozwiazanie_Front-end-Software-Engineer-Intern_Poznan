@@ -26,4 +26,8 @@ export class PokeapiService {
   ) {
     return this.http.get(url);
   }
+
+  getTypes() {
+    return this.http.get(`${this.urlTemplate}type/`);
+  }
 }
