@@ -4,7 +4,7 @@
   >
     <input
       type="search"
-      placeholder="Search your pokemon"
+      placeholder="Search your pokemon..."
       class="form-control bg-none border-0 rounded-pill"
       (keyup.enter)="searchPokemon()"
       #search
@@ -66,8 +66,8 @@
           <a class="dropdown-item" (click)="showResults('Types')"
             ><i class="fas fa-splotch"></i> Type</a
           >
-          <a class="dropdown-item" (click)="showResults('Eggs')"
-            ><i class="fas fa-egg"></i> Egg type</a
+          <a class="dropdown-item" (click)="showAlphabet()"
+            ><i class="fas fa-font"></i> First letter</a
           >
         </div>
       </div>
@@ -97,7 +97,7 @@
       type="button"
       (click)="applyFilters()"
     >
-      Apply
+      Apply <i class="fas fa-check"></i>
     </button>
   </nav>
 </div>

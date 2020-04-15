@@ -60,7 +60,7 @@ nav {
     width: 350px;
     height: 350px;
     &:hover {
-      filter: saturate(200%);
+      filter: saturate(150%);
       transform: scale(1.01);
       transition-duration: 1s;
     }

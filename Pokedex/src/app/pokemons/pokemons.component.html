@@ -36,7 +36,7 @@
   <img class="pokeball" src="../../assets/pokaball.png" />
 </span>
 
-<nav aria-label="Page navigation">
+<nav aria-label="Page navigation" *ngIf="!loading">
   <ul class="pagination" *ngIf="!sorting">
     <li class="page-item" *ngIf="previous !== null" (click)="goToUrl(first)">
       <a class="page-link" aria-label="Previous">
@@ -58,7 +58,7 @@
     </li>
   </ul>
 
-  <ul class="pagination" *ngIf="sorting">
+  <ul class="pagination" *ngIf="sorting && !loading">
     <li
       class="page-item"
       *ngIf="currentBottom != 0"
