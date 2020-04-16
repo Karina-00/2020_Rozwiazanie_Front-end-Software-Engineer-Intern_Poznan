@@ -107,6 +107,7 @@ export class PokemonsComponent implements OnInit {
 
   searchPokemon(urlValue: string) {
     this.err = false;
+    this.sorting = false;
     this.currentPokemons = [];
     if (urlValue === '') {
       return this.initialPokemonsLoad(this.defaultUrl);
@@ -170,12 +171,13 @@ export class PokemonsComponent implements OnInit {
           this.displayPokemons();
         });
     } else {
-      this.pokemons.sort((a, b) =>
-        a[key] > b[key] ? Math.pow(-1, num) : Math.pow(-1, num + 1)
-      );
-      setTimeout(() => {
-        this.displayPokemons();
-      }, 7000);
+      Promise.all(this.pokemons)
+        .then(() => {
+          this.pokemons.sort((a, b) =>
+            a[key] > b[key] ? Math.pow(-1, num) : Math.pow(-1, num + 1)
+          );
+        })
+        .then(() => this.displayPokemons());
     }
   }
 

@@ -66,11 +66,9 @@ export class SinglePokemonViewComponent implements OnInit {
       name = ab['ability']['name'];
       this.http.get(ab['ability']['url']).subscribe(res => {
         description = res['effect_entries'][0]['effect'];
-      });
-      setTimeout(() => {
         const ability = new Ability(name, description);
         this.abilities.push(ability);
-      }, 1500);
+      });
     });
   }
 
@@ -134,13 +132,11 @@ export class SinglePokemonViewComponent implements OnInit {
             this.eggs.push(egg['name']);
           });
           this.getEvolution(response['evolution_chain']);
+          this.loading = false;
         });
       },
       err => (this.err = true)
     );
-    setTimeout(() => {
-      this.loading = false;
-    }, 1500);
   }
 
   pokemonSetUp() {
