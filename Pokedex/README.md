@@ -7,6 +7,8 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 - `npm install`
 - `ng serve` or `npm start`
 
+It's available here: https://pokedex-karina.herokuapp.com
+
 ## Description
 
 Regardless of whether you are a big fan of pokemons or just want to find out something about them, it is a perfect place for you. In my Pokedex, you can easily find all the pokemons, you are looking for, and learn plenty of interesting facts about them.
