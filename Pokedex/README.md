@@ -4,7 +4,8 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Run project
 
- `ng serve` or `npm start`
+- `npm install`
+- `ng serve` or `npm start`
 
 ## Description
 
