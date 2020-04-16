@@ -25,7 +25,7 @@ Regardless of whether you are a big fan of pokemons or just want to find out som
 
 <img src="src/assets/readme/search.png" width=600>
 
-- In the detailed view, there are basic information, stats, and evolutions of a particular pokemon.
+- In the detailed view, there are basic information, stats, and evolutions of a particular pokemon and each evolution picture redirects to this pokemon.
  
  <img src="src/assets/readme/about.png" width=600>
  
